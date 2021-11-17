@@ -1,13 +1,9 @@
+{% extends 'base_template.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% block page_title %} Главная страница {% endblock %}
+{% block page_content %}
 <body>
-<h1>{{name}}</h1>
 <iframe src="//coub.com/embed/1889me?muted=false&autostart=false&originalSize=false&startWithHD=false" allowfullscreen frameborder="0" width="640" height="360" allow="autoplay"></iframe>
 <img src="{% static 'mainapp/back_image.jpg' %}" alt="My image">
 </body>
-</html>
+{% endblock %}
