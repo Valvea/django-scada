@@ -12,9 +12,11 @@ def gant_view(request):
 
 
 def task_view(request):
+    # Get the variable text
+    print(request.GET)
+    # Do whatever with the input variable text
 
-    task=dict(request.GET)
-    print(task)
+    # Send the response
 
-    return render(request, 'mainapp/gant.html', )
+    return HttpResponse(request)
 

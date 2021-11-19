@@ -7,6 +7,10 @@ butshowform.addEventListener('click', () => {
   popup.classList.add('popup_open');
 });
 
+
+
+
+
 var tasks = [
 			{
 				start: '2018-10-01',
@@ -63,7 +67,7 @@ var tasks = [
 				id: "Task 6",
 				progress: 0
 			}
-		]
+		];
 var gantt_chart = new Gantt(".gantt-target", tasks,
      {
 			on_click: function (task) {

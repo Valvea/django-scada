@@ -111,7 +111,22 @@
 		</div>
 
 
+
 <script src="{% static 'gant/dist/inis.js' %}"></script>
+		<script>
+
+
+var text = "test successful";
+
+$.ajax({
+   type: "GET",
+   url: 'addtask',
+   data: { text: text },
+   success: function callback(response){
+               console.log(response);
+            }
+});
+</script>
 
 </body>
 </html>
