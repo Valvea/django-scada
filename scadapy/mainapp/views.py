@@ -1,5 +1,8 @@
 from django.shortcuts import render
+import json
 from django.http import HttpResponse
+import  os
+
 
 def main_view(request):
     context={'name':'Саня'}
@@ -12,11 +15,19 @@ def gant_view(request):
 
 
 def task_view(request):
-    # Get the variable text
-    print(request.GET)
-    # Do whatever with the input variable text
 
-    # Send the response
+    task=dict(request.GET)
+    obj={}
+    for k,v in task.items():
+       obj.update({k:v[0]})
 
-    return HttpResponse(request)
+    json_object = json.dumps(obj, indent=4)
 
+
+    return render(request, 'mainapp/gant.html',obj)
+
+def get_tasks(request):
+
+    with open('test.json') as f:
+
+        return HttpResponse(f,content_type='application/json')
