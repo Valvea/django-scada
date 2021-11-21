@@ -11,67 +11,11 @@ butshowform.addEventListener('click', () => {
 
 
 
-var tasks = [
-			{
-				start: '2021-11-01',
-				end: '2021-11-08',
-				name: 'Redesign website',
-				id: "Task 0",
-				progress: 20
-			},
-			{
-				start: '2021-11-03',
-				end: '2021-11-06',
-				name: 'Write new content',
-				id: "Task 1",
-				progress: 5,
-				dependencies: 'Task 0'
-			},
-			{
-				start: '2021-11-04',
-				end: '2021-11-08',
-				name: 'Apply new styles',
-				id: "Task 2",
-				progress: 10,
-				dependencies: 'Task 1'
-			},
-			{
-				start: '2021-11-08',
-				end: '2021-11-09',
-				name: 'Review',
-				id: "Task 3",
-				progress: 5,
-				dependencies: 'Task 2'
-			},
-			{
-				start: '2021-11-08',
-				end: '2021-11-10',
-				name: 'Deploy',
-				id: "Task 4",
-				progress: 0,
-				dependencies: 'Task 2'
-			},
-			{
-				start: '2021-11-11',
-				end: '2021-11-11',
-				name: 'Go Live!',
-				id: "Task 5",
-				progress: 0,
-				dependencies: 'Task 4',
-				custom_class: 'bar-milestone'
-			},
-			{
-				start: '2021-11-05',
-				end: '2021-11-12',
-				name: 'Long term task',
-				id: "Task 6",
-				progress: 0
-			}
-		];
-var gantt_chart = new Gantt(".gantt-target", tasks,
+var gantt_chart = new Gantt(".gantt-target", received_data,
      {
 			on_click: function (task) {
 				console.log(task);
+				console.log('ckiked!');
 			},
 			on_date_change: function(task, start, end) {
 				console.log(task, start, end);
@@ -89,5 +33,38 @@ var gantt_chart = new Gantt(".gantt-target", tasks,
 
 		});
 console.log(gantt_chart);
+gantt_chart.setup_tasks(gantt_chart.tasks);
+gantt_chart.refresh(gantt_chart.tasks);
+
+//function Send_json_object(url_){
+//xhr = new XMLHttpRequest();
+//var url = url_;
+//xhr.open("GET", url);
+//xhr.setRequestHeader("Content-type", "text");
+////var to_send = JSON.stringify({"tasks":gantt_chart.tasks})
+//xhr.send("to_sen");
+//};
+
+function Send_json_object(url_){
+$.ajax({
+    url: url_,
+    type: 'GET',
+    contentType: 'application/json; charset=utf-8',
+    processData: false,
+    data: JSON.stringify(gantt_chart.tasks),
+})
+};
+
+
+today = new Date()
+today=today.toISOString().split('T')[0]
+var dateControl_start = document.querySelector('input[name="start"]');
+var dateControl_end = document.querySelector('input[name="end"]');
+dateControl_start.value = today;
+dateControl_end.value = today;
+console.log(today);
+
+
+
 
 
