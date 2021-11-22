@@ -19,7 +19,7 @@ form.addEventListener("submit", function(event) {
     deps.push(op.index);
     });
     var task = {
-    id: "Task "+gantt_chart.tasks[gantt_chart.tasks.length-1]._index,
+    id: "Task "+gantt_chart.tasks[gantt_chart.tasks.length-1]._index+1,
     name: els.name.value,
     start: els.start.value,
     end: els.end.value,
