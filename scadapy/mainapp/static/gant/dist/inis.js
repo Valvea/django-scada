@@ -8,14 +8,33 @@ butshowform.addEventListener('click', () => {
 });
 
 
+var last_cliked_task;
 
+
+var form = document.querySelector("form");
+form.addEventListener("submit", function(event) {
+    var els=form.elements;
+    var deps=[];
+    $.each(els.dependencies.selectedOptions, function(i,op) {
+    deps.push(op.index);
+    });
+    var task = {
+    id: "Task "+gantt_chart.tasks[gantt_chart.tasks.length-1]._index,
+    name: els.name.value,
+    start: els.start.value,
+    end: els.end.value,
+    progress: els.progress.value,
+    dependencies: deps.map(it=>"Task "+String(it)),
+    custom_class: 'bar-milestone' }
+    gantt_chart.tasks.push(task);
+  });
 
 
 var gantt_chart = new Gantt(".gantt-target", received_data,
      {
 			on_click: function (task) {
-				console.log(task);
-				console.log('ckiked!');
+				last_cliked_task=task.id;
+
 			},
 			on_date_change: function(task, start, end) {
 				console.log(task, start, end);
@@ -32,9 +51,13 @@ var gantt_chart = new Gantt(".gantt-target", received_data,
 			language: 'ru',
 
 		});
-console.log(gantt_chart);
 gantt_chart.setup_tasks(gantt_chart.tasks);
 gantt_chart.refresh(gantt_chart.tasks);
+
+$('#dependencies').empty();
+$.each(gantt_chart.tasks, function(_index, task) {
+     $('#dependencies').append($('<option></option>').val(task.name).html(task.name));
+});
 
 
 function Send_json_object(url_){
@@ -43,20 +66,17 @@ $.ajax({
     type: 'GET',
     contentType: 'application/json; charset=utf-8',
     processData: false,
-    data: JSON.stringify(gantt_chart.tasks),
+    data: JSON.stringify(gantt_chart.tasks)
 })
 };
 
 $(window).ready(function()
 {
     $(window).bind("beforeunload", function() {
-        Send_json_object('/get_json');
+        if (window.location.pathname=='/gant/')
+        {Send_json_object('/get_json');}
     });
 });
-
-
-
-
 
 
 today = new Date()
@@ -66,7 +86,6 @@ var dateControl_end = document.querySelector('input[name="end"]');
 dateControl_start.value = today;
 dateControl_end.value = today;
 console.log(today);
-
 
 
 

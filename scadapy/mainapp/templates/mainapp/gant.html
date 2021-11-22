@@ -98,8 +98,6 @@ var received_data  = {{ json_ob|safe }};
 <div class="container">
 		<h2>Диаграмма Ганта отдела промышленной подготовки</h2>
 		<div class="gantt-target"></div>
-
-
 		<div class="btn-group">
   			<button onclick="gantt_chart.change_view_mode('Day');">День</button>
 		  	<button onclick="gantt_chart.change_view_mode('Week');">Неделя</button>
@@ -107,15 +105,15 @@ var received_data  = {{ json_ob|safe }};
 			<button onclick="gantt_chart.change_view_mode('Half Day');" >Полдня</button>
 		  	<button onclick="gantt_chart.change_view_mode('Quarter Day');">Четверть дня</button>
 			<button id="showform">Добавить задачу</button>
-			<button onclick="Send_json_object('/get_json');">Отправить json</button>
-
+			<button onclick="gantt_chart.tasks.pop(last_cliked_task);
+							 gantt_chart.refresh(gantt_chart.tasks);">Удалить задачу</button>
+<!--action="/addtask" autocomplete="off" method="GET"-->
 		</div>
 		<div class="popup">
   			<div class="popup__container">
     			<div class="popup__wrapper">
      				 <div id="addtask">
-
-        				<form role="form" action="/addtask" autocomplete="off" method="GET">
+        				<form role="form" >
 						  <label>Название Задачи</label>
 						  <input type="text" name="name">
 						  <label>Начало задачи:</label>
@@ -125,11 +123,11 @@ var received_data  = {{ json_ob|safe }};
 						  <label>Прогресс:</label>
 						  <input type="text" name="progress">
 							<label>Зависимость</label>
-
-							<select id="dependencies" name="dependencies" >
-									{% for task in tasks %}
-									<option>{{task.name}} {{ task.id }}</option>
-									{% endfor %}
+							<select id="dependencies" name="dependencies" multiple  >
+									<option>Выберете задачу</option>
+<!--									{% for task in tasks %}-->
+<!--									<option >{{task.name}} {{ task.id }}</option>-->
+<!--									{% endfor %}-->
 							</select>
 						  <button type="submit" class="btn btn-success">Отправить</button>
         				</form>
