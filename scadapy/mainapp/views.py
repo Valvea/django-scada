@@ -66,11 +66,12 @@ def add_task(request):
         f.seek(0)
         f.write(json_ob)
 
-
     return HttpResponseRedirect('/gant')
 
 
-def get_json_object(request):
-    json_ob=dict(request.GET)
-    print(json_ob)
+def save_tasks(request):
+    # json_ob=json.dumps(list(request.GET))
+    print(request.GET)
+    # print(json_ob)
+
     return HttpResponse(200)

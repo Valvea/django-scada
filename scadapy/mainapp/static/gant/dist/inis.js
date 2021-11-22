@@ -36,14 +36,6 @@ console.log(gantt_chart);
 gantt_chart.setup_tasks(gantt_chart.tasks);
 gantt_chart.refresh(gantt_chart.tasks);
 
-//function Send_json_object(url_){
-//xhr = new XMLHttpRequest();
-//var url = url_;
-//xhr.open("GET", url);
-//xhr.setRequestHeader("Content-type", "text");
-////var to_send = JSON.stringify({"tasks":gantt_chart.tasks})
-//xhr.send("to_sen");
-//};
 
 function Send_json_object(url_){
 $.ajax({
@@ -54,6 +46,17 @@ $.ajax({
     data: JSON.stringify(gantt_chart.tasks),
 })
 };
+
+$(window).ready(function()
+{
+    $(window).bind("beforeunload", function() {
+        Send_json_object('/get_json');
+    });
+});
+
+
+
+
 
 
 today = new Date()
