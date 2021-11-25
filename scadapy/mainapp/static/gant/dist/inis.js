@@ -30,6 +30,7 @@ form.addEventListener("submit", function(event) {
   });
 
 
+
 var gantt_chart = new Gantt(".gantt-target", received_data,
      {
 			on_click: function (task) {

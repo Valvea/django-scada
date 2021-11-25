@@ -6,7 +6,7 @@ import  os
 
 
 def main_view(request):
-    context={'name':'Саня'}
+    context={'name':'Сепя'}
     return render(request, 'mainapp/main_page.html',context)
 
 

@@ -81,7 +81,7 @@
 
 		label {
 			margin-bottom: 10px;
-			margin-height: 10px;
+		
 		}
 
 	</style>
@@ -89,11 +89,11 @@
 <link rel="stylesheet" href="{% static 'gant/dist/frappe-gantt.css' %}" />
 <script src="{% static 'gant/dist/frappe-gantt.js' %}"></script>
 
-
-
 <script type="text/javascript" >
-var received_data  = {{ json_ob|safe }};
+var received_data  = {{ json_ob | safe }};
 </script>
+
+
 
 <div class="container">
 		<h2>Диаграмма Ганта отдела промышленной подготовки</h2>
