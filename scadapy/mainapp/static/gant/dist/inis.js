@@ -1,39 +1,20 @@
 const butshowform = document.querySelector('#showform');
+const deltask = document.querySelector('#deltask');
 const form_add_task = document.querySelector('#addtask');
 const popup = document.querySelector('.popup');
+const form = document.querySelector("form");
 
 butshowform.addEventListener('click', () => {
   form_add_task.classList.add('open');
   popup.classList.add('popup_open');
 });
 
-
 var last_cliked_task;
-
-
-var form = document.querySelector("form");
-form.addEventListener("submit", function(event) {
-    var els=form.elements;
-    var deps=[];
-    $.each(els.dependencies.selectedOptions, function(i,op) {
-    deps.push(op.index);
-    });
-    var task = {
-    id: "Task "+gantt_chart.tasks[gantt_chart.tasks.length-1]._index+1,
-    name: els.name.value,
-    start: els.start.value,
-    end: els.end.value,
-    progress: els.progress.value,
-    dependencies: deps.map(it=>"Task "+String(it)),
-    custom_class: 'bar-milestone' }
-    gantt_chart.tasks.push(task);
-  });
-
-
 
 var gantt_chart = new Gantt(".gantt-target", received_data,
      {
 			on_click: function (task) {
+        
 				last_cliked_task=task.id;
 
 			},
@@ -52,8 +33,56 @@ var gantt_chart = new Gantt(".gantt-target", received_data,
 			language: 'ru',
 
 		});
-gantt_chart.setup_tasks(gantt_chart.tasks);
-gantt_chart.refresh(gantt_chart.tasks);
+
+
+
+form.addEventListener("submit", function(event) {
+    var els=form.elements;
+    var deps=[];
+    $.each(els.dependencies.selectedOptions, function(i,op) {
+    deps.push(op.index);
+    });
+
+    if (gantt_chart.tasks.length==0) {
+      var task = {
+        id: '0',
+        name: els.name.value,
+        start: els.start.value,
+        end: els.end.value,
+        progress: Number(els.progress.value),
+        dependencies: '',
+        custom_class: 'bar-milestone' }
+      
+    } else {
+      deps=deps.map(it=>"Task "+String(it));
+      const reducer = (previousValue, currentValue) => previousValue +","+ currentValue;
+      console.log(gantt_chart.tasks.length)
+      var task = {
+      id: gantt_chart.tasks.length,
+      name: els.name.value,
+      start: els.start.value,
+      end: els.end.value,
+      progress: els.progress.value,
+      dependencies: deps.length>0?deps.reduce(reducer):'',
+      custom_class: 'bar-milestone' }
+    }
+    Send_json_object({"tasks":task,
+              'task':'add'});
+  });
+
+  deltask.addEventListener("click",function(event){
+    if (last_cliked_task!=undefined)
+    {
+      Send_json_object({"tasks":last_cliked_task,
+      'task':'del'});
+      gantt_chart.tasks.pop(last_cliked_task);
+      gantt_chart.refresh(gantt_chart.tasks);
+    }
+
+  });
+
+
+
 
 $('#dependencies').empty();
 $.each(gantt_chart.tasks, function(_index, task) {
@@ -61,23 +90,17 @@ $.each(gantt_chart.tasks, function(_index, task) {
 });
 
 
-function Send_json_object(url_){
-$.ajax({
-    url: url_,
-    type: 'GET',
-    contentType: 'application/json; charset=utf-8',
-    processData: false,
-    data: JSON.stringify(gantt_chart.tasks)
-})
-};
 
-$(window).ready(function()
-{
-    $(window).bind("beforeunload", function() {
-        if (window.location.pathname=='/gant/')
-        {Send_json_object('/get_json');}
-    });
-});
+
+// $(window).ready(function()
+// {
+//     $(window).bind("beforeunload", function() {
+//         if (window.location.pathname=='/gant/')
+//             {Send_json_object({"tasks":gantt_chart.tasks,
+//           'task':'save'});
+//         }
+//     });
+// });
 
 
 today = new Date()

@@ -84,15 +84,30 @@
 		
 		}
 
-	</style>
+</style>
 
 <link rel="stylesheet" href="{% static 'gant/dist/frappe-gantt.css' %}" />
 <script src="{% static 'gant/dist/frappe-gantt.js' %}"></script>
 
-<script type="text/javascript" >
+<script type="text/javascript">
 var received_data  = {{ json_ob | safe }};
-</script>
 
+received_data=received_data["map"](function(obj){
+    obj['fields']['id']="Task "+ obj['pk']
+    return obj['fields']  });
+
+function Send_json_object(data_){
+	$.ajax({
+			url: {% url 'main:mangetask' %},
+			type: 'POST',
+			dataType: 'json',
+			// contentType: 'application/json; charset=utf-8',
+			// processData: false,
+			data: {"data_": JSON.stringify(data_),csrfmiddlewaretoken:'{{ csrf_token }}'},
+		})
+};
+
+</script>
 
 
 <div class="container">
@@ -105,29 +120,26 @@ var received_data  = {{ json_ob | safe }};
 			<button onclick="gantt_chart.change_view_mode('Half Day');" >Полдня</button>
 		  	<button onclick="gantt_chart.change_view_mode('Quarter Day');">Четверть дня</button>
 			<button id="showform">Добавить задачу</button>
-			<button onclick="gantt_chart.tasks.pop(last_cliked_task);
-							 gantt_chart.refresh(gantt_chart.tasks);">Удалить задачу</button>
+			<button id="deltask" >Удалить задачу</button>
 <!--action="/addtask" autocomplete="off" method="GET"-->
 		</div>
 		<div class="popup">
   			<div class="popup__container">
     			<div class="popup__wrapper">
      				 <div id="addtask">
-        				<form role="form" >
+        				<form role="form" method='POST'>
+							{% csrf_token %}
 						  <label>Название Задачи</label>
 						  <input type="text" name="name">
 						  <label>Начало задачи:</label>
-						  <input type="date"   name="start">
+						  <input type="datetime-local"   name="start">
 						  <label>Окончание задачи:</label>
-						  <input type="date"  name="end">
+						  <input type="datetime-local"  name="end">
 						  <label>Прогресс:</label>
 						  <input type="text" name="progress">
 							<label>Зависимость</label>
 							<select id="dependencies" name="dependencies" multiple  >
 									<option>Выберете задачу</option>
-<!--									{% for task in tasks %}-->
-<!--									<option >{{task.name}} {{ task.id }}</option>-->
-<!--									{% endfor %}-->
 							</select>
 						  <button type="submit" class="btn btn-success">Отправить</button>
         				</form>
