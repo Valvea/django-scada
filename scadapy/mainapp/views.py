@@ -1,7 +1,8 @@
 from django.shortcuts import redirect, render
 from django.core import serializers
-import json
 from django.http import HttpResponse,HttpResponseRedirect
+from django.db import transaction
+import json
 import  os
 from .models import Task
 
@@ -45,6 +46,29 @@ def manage_task(request):
             task=Task.objects.get(id=task_id)
             task.delete()
             
+        case 'change':
+            print(dict_of_task['tasks'])
+            if  dict_of_task['tasks']:
+                with transaction.atomic():
+                    for task_ in dict_of_task['tasks']:
+                        for key,task in task_.items():
+                            taskdb=Task.objects.get(id=task['id'])
+                            match key:
+                                case 'data_change':
+                                    taskdb.start=task['start']
+                                    taskdb.end=task['end']
+                                    
+                                case 'progress_changed':
+                                    taskdb.progress=task['progress']
+                                    
+                    taskdb.save()
+                
+            
+                 
+                   
+
+
+
 
     return HttpResponseRedirect('/gant')
 

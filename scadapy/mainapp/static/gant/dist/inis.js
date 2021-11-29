@@ -1,6 +1,7 @@
 const butshowform = document.querySelector('#showform');
 const deltask = document.querySelector('#deltask');
 const form_add_task = document.querySelector('#addtask');
+const butchangetask = document.querySelector('#changetask');
 const popup = document.querySelector('.popup');
 const form = document.querySelector("form");
 
@@ -9,7 +10,14 @@ butshowform.addEventListener('click', () => {
   popup.classList.add('popup_open');
 });
 
+butchangetask.addEventListener('click', () => {
+ Send_json_object({"tasks":tasks_changed,
+ 'task':'change'})
+});
+
+
 var last_cliked_task;
+var tasks_changed =[];
 
 var gantt_chart = new Gantt(".gantt-target", received_data,
      {
@@ -20,9 +28,13 @@ var gantt_chart = new Gantt(".gantt-target", received_data,
 			},
 			on_date_change: function(task, start, end) {
 				console.log(task, start, end);
+        tasks_changed.push({
+        'data_change':{'id':Number(task['id'].slice(-1)) ,'start':start,'end':end}});
 			},
 			on_progress_change: function(task, progress) {
 				console.log(task, progress);
+        tasks_changed.push({'progress_changed':
+        {'id':Number(task['id'].slice(-1)),'progress':progress}});
 			},
 			on_view_change: function(mode) {
 				console.log(mode);
@@ -67,7 +79,7 @@ form.addEventListener("submit", function(event) {
       custom_class: 'bar-milestone' }
     }
     Send_json_object({"tasks":task,
-              'task':'add'});
+              'task':'change'});
   });
 
   deltask.addEventListener("click",function(event){
