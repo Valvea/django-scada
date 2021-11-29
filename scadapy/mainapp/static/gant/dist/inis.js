@@ -79,7 +79,7 @@ form.addEventListener("submit", function(event) {
       custom_class: 'bar-milestone' }
     }
     Send_json_object({"tasks":task,
-              'task':'change'});
+              'task':'add'});
   });
 
   deltask.addEventListener("click",function(event){
