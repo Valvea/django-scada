@@ -20,34 +20,6 @@ var last_cliked_task;
 var tasks_changed ={'data_change':{},
                     'progress_changed':{}};
 
-var gantt_chart = new Gantt(".gantt-target", received_data,
-     {
-			on_click: function (task) {
-        
-				last_cliked_task=task.id;
-
-			},
-			on_date_change: function(task, start, end) {
-				console.log(task, start, end);
-        tasks_changed['data_change'][Number(task['id'].slice(-1))]={'start':start,'end':end}
-        // tasks_changed.push({
-        // 'data_change':{'id':Number(task['id'].slice(-1)) ,'start':start,'end':end}});
-			},
-			on_progress_change: function(task, progress) {
-				console.log(task, progress);
-        tasks_changed['progress_changed'][Number(task['id'].slice(-1))]={'progress':progress}
-        // tasks_changed.push({'progress_changed':
-        // {'id':Number(task['id'].slice(-1)),'progress':progress}});
-			},
-			on_view_change: function(mode) {
-				console.log(mode);
-			},
-
-    		view_mode: 'Day',
-
-			language: 'ru',
-
-		});
 
 
 
@@ -58,9 +30,9 @@ form.addEventListener("submit", function(event) {
     deps.push(op.index);
     });
 
-    if (gantt_chart.tasks.length==0) {
+    if (gantt_chart==undefined) {
       var task = {
-        id: '0',
+        id:0,
         name: els.name.value,
         start: els.start.value,
         end: els.end.value,
@@ -77,7 +49,7 @@ form.addEventListener("submit", function(event) {
       name: els.name.value,
       start: els.start.value,
       end: els.end.value,
-      progress: els.progress.value,
+      progress: Number(els.progress.value)>0? Number(els.progress.value):1,
       dependencies: deps.length>0?deps.reduce(reducer):'',
       custom_class: 'bar-milestone' }
     }
@@ -97,12 +69,44 @@ form.addEventListener("submit", function(event) {
   });
 
 
+  var gantt_chart = new Gantt(".gantt-target", received_data,
+  {
+   on_click: function (task) {
+     
+     last_cliked_task=task.id;
+
+   },
+   on_date_change: function(task, start, end) {
+     console.log(task, start, end);
+     tasks_changed['data_change'][Number(task['id'].slice(-1))]={'start':start,'end':end}
+     // tasks_changed.push({
+     // 'data_change':{'id':Number(task['id'].slice(-1)) ,'start':start,'end':end}});
+   },
+   on_progress_change: function(task, progress) {
+     console.log(task, progress);
+     tasks_changed['progress_changed'][Number(task['id'].slice(-1))]={'progress':progress}
+     // tasks_changed.push({'progress_changed':
+     // {'id':Number(task['id'].slice(-1)),'progress':progress}});
+   },
+   on_view_change: function(mode) {
+     console.log(mode);
+   },
+
+     view_mode: 'Day',
+
+   language: 'ru',
+
+ });
+
+
+
 
 
 $('#dependencies').empty();
 $.each(gantt_chart.tasks, function(_index, task) {
      $('#dependencies').append($('<option></option>').val(task.name).html(task.name));
 });
+
 
 
 
